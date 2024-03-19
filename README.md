@@ -17,7 +17,7 @@ npm install express-curl-mock-logger
 
 ```js
 import express from 'express';
-import httpLoggerCreator from './index.mjs';
+import httpLoggerCreator from './index.js';
 
 const app = express();
 

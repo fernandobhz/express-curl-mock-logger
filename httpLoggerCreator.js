@@ -1,6 +1,6 @@
 import fs from "fs";
-import { logPathGenerator, ensureDirectoryExists } from "./helpers.mjs";
-import { curlCommandGenerator } from "./curlGenerator.mjs";
+import { logPathGenerator, ensureDirectoryExists } from "./helpers.js";
+import { curlCommandGenerator } from "./curlGenerator.js";
 
 const textContentTypesFragments = ["json", "text", "xml", "html", "javascript", "css", "csv", "plain"];
 const unknowFilePrefixDescriptor = `just.response.body`;

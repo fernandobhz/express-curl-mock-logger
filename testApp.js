@@ -1,6 +1,6 @@
 import fs from 'fs';
 import express from 'express';
-import httpLoggerCreator from './index.mjs';
+import httpLoggerCreator from './index.js';
 
 const defaultLogFolder = 'http-logs';
 
