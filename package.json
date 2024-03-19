@@ -1,6 +1,6 @@
 {
   "name": "express-curl-mock-logger",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "This is an npm package designed to mock curl requests in an Express.js application and write the corresponding response to a file.",
   "main": "index.mjs",
   "scripts": {
