@@ -21,10 +21,18 @@ const curlBodyGenerator = (req) => {
 
 module.exports.curlCommandGenerator = (req) => {
   const method = req.method;
-  const url = req.originalUrl;
-  const headers = Object.entries(req.headers)
+  const { host, port } = req.headers;
+  const defaultHost = "localhost";
+
+  const protocol = req.protocol === "https" ? "https" : "http";
+  const usedHost = host || defaultHost;
+  const url = `${protocol}://${usedHost}${req.originalUrl}`;
+
+  const headersString = Object.entries(req.headers)
     .map(([key, value]) => `-H "${key}: ${value.replace(/"/g, '\\"')}"`)
     .join(" ");
+
   const body = curlBodyGenerator(req);
-  return `curl -X ${method} ${url} ${headers} ${body}`;
+  const curlCommand = `curl -X ${method} ${url} ${headersString} ${body}`;
+  return curlCommand;
 };
