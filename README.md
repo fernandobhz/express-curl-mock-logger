@@ -16,13 +16,12 @@ npm install express-curl-mock-logger
 ## 1. Import the express-curl-mock-logger middleware into your Express.js application:
 
 ```js
-const express = require('express');
-const expressCurlMockerLogger = require('express-curl-mock-logger');
+import express from 'express';
+import httpLoggerCreator from './index.mjs';
 
 const app = express();
 
-app.use(expressCurlMockerLogger);
-
+app.use(httpLoggerCreator());
 
 // Your routes and other middleware definitions go here
 // Example route for testing that library

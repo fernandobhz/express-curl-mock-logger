@@ -15,8 +15,10 @@
     "express",
     "curl",
     "mocker",
+    "mock",
     "request",
-    "response"
+    "response",
+    "audit"
   ],
   "author": "Fernando Reis Guimarães",
   "license": "ISC",
