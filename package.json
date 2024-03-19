@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/fernandobhz/express-curl-mock-logger/issues"
   },
-  "homepage": "https://github.com/fernandobhz/express-curl-mock-logger#readme"
+  "homepage": "https://github.com/fernandobhz/express-curl-mock-logger#readme",
+  "devDependencies": {
+    "express": "^4.18.3"
+  }
 }
