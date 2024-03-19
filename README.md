@@ -16,8 +16,8 @@ npm install express-curl-mock-logger
 ## 1. Import the express-curl-mock-logger middleware into your Express.js application:
 
 ```js
-import express from 'express';
-import httpLoggerCreator from './index.js';
+const express = require('express');
+const httpLoggerCreator = require('./index.js');
 
 const app = express();
 
@@ -29,10 +29,10 @@ app.get('/', (req, res) => {
   res.status(200).json({ message: 'Hello, world!' });
 });
 
-
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
 });
+
 ```
 
 ## 2. With the middleware in place, all incoming requests and corresponding responses will be logged to a file in the specified format.

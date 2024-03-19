@@ -1,2 +1,2 @@
-import { httpLoggerCreator } from './httpLoggerCreator.js'
-export default httpLoggerCreator;
+const httpLoggerCreator = require("./httpLoggerCreator.js");
+module.exports = httpLoggerCreator;

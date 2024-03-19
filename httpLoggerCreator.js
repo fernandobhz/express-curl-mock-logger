@@ -1,11 +1,11 @@
-import fs from "fs";
-import { logPathGenerator, ensureDirectoryExists } from "./helpers.js";
-import { curlCommandGenerator } from "./curlGenerator.js";
+const fs = require("fs");
+const { logPathGenerator, ensureDirectoryExists } = require("./helpers.js");
+const { curlCommandGenerator } = require("./curlGenerator.js");
 
 const textContentTypesFragments = ["json", "text", "xml", "html", "javascript", "css", "csv", "plain"];
 const unknowFilePrefixDescriptor = `just.response.body`;
 
-export const httpLoggerCreator = (logFolder = "http-logs", logCurlToConsole = false, logResponseToConsole = false) => {
+module.exports = (logFolder = "http-logs", logCurlToConsole = false, logResponseToConsole = false) => {
   return (req, res, next) => {
     const logPath = logPathGenerator(logFolder);
     const logReqResPath = `${logPath}.req.res.txt`;
@@ -47,7 +47,7 @@ export const httpLoggerCreator = (logFolder = "http-logs", logCurlToConsole = fa
       const responseContentType = res.get("Content-Type");
       const fileExtension = responseContentType ? textContentTypesFragments.find((fragment) => responseContentType.includes(fragment)) || "unknow" : "unknow";
       const isTextResponse = fileExtension !== "unknow";
-      
+
       const logBodyPath = `${logPath}.${unknowFilePrefixDescriptor}.${fileExtension}`;
       const logBody = isTextResponse ? body : `Unknow reponse content type, check the '${logBodyPath}' file for its contents`;
 

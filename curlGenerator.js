@@ -1,6 +1,6 @@
 const curlBodyGenerator = (req) => {
   if (!req.body) {
-    return '';
+    return "";
   }
 
   if (req.body) {
@@ -14,12 +14,12 @@ const curlBodyGenerator = (req) => {
       return body;
     }
 
-    const body = `-d '${req.body.replace(/'/g, "\\'")}'`;  
+    const body = `-d '${req.body.replace(/'/g, "\\'")}'`;
     return body;
   }
 };
 
-export const curlCommandGenerator = (req) => {
+module.exports.curlCommandGenerator = (req) => {
   const method = req.method;
   const url = req.originalUrl;
   const headers = Object.entries(req.headers)
