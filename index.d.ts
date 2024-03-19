@@ -8,7 +8,7 @@ declare module 'express-curl-mock-logger' {
     }
   
     // Define the exported function and its type
-    function httpLoggerCreator(options?: Options): void;
+    function httpLoggerCreator(options?: Options): RequestHandler;
   
     // Export the function and any other types
     export = httpLoggerCreator;
