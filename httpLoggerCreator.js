@@ -47,7 +47,8 @@ module.exports = (logFolder = "http-logs", logCurlToConsole = false, logResponse
       const currentFragment = responseContentType ? textContentTypesFragments.find((fragment) => responseContentType.includes(fragment)) || "unknow" : "unknow";
       const isTextResponse = currentFragment !== "unknow";
 
-      const urlFileExtension = path.extname(originalUrl.split('?').at(0)).slice(1);
+      const urlFullFileName = path.basename(originalUrl.split('?').at(0)) || 'root';
+      const urlFileExtension = path.extname(urlFullFileName).slice(1);
       const logFileExtension = urlFileExtension || currentFragment;
 
       const contentEncoding = res.get("Content-Encoding");
@@ -56,7 +57,7 @@ module.exports = (logFolder = "http-logs", logCurlToConsole = false, logResponse
 
       const isWindows = os.platform() === 'win32';
       const logPath = logPathGenerator(logFolder);
-      const logSubFolder = `${logPath}${path.sep}`;
+      const logSubFolder = `${logPath}-${urlFullFileName}${path.sep}`;
       const curlLogPath = `${logSubFolder}curl.${isWindows ? 'bat' : 'sh'}`;
       const requestLogPath = `${logSubFolder}request.txt`;
       const responseLogPath = `${logSubFolder}response.txt`;
