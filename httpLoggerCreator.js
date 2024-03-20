@@ -96,7 +96,12 @@ module.exports = (logFolder = "http-logs", logCurlToConsole = false, logResponse
       fs.writeFileSync(curlLogPath, curlCommand);
       fs.writeFileSync(requestLogPath, fullTextRequest);
       fs.writeFileSync(responseLogPath, fullTextResponse);
-      fs.writeFileSync(fileContentPath, chunksBuffer);
+
+      if (isTextResponse) {
+        fs.writeFileSync(fileContentPath, responseTextBody);
+      } else {
+        fs.writeFileSync(fileContentPath, chunksBuffer);
+      }
 
 
       if (logCurlToConsole && isTextResponse && logResponseToConsole) {
