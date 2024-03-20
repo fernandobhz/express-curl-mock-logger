@@ -1,16 +1,30 @@
 const fs = require("fs");
 const path = require("path");
 
-module.exports.logPathGenerator = (logFolder) => {
-  const now = new Date();
+module.exports.timestampFileNameGenerator = (now = new Date()) => {
   const fileName = now.toISOString().replaceAll(`:`, `-`).replaceAll(".", "-");
-  const fullFilePath = path.join(logFolder, fileName);
-  return fullFilePath;
-};
+  return fileName;
+}
 
-module.exports.ensureDirectoryExists = (filePath) => {
-  const dirname = path.dirname(filePath);
-  if (!fs.existsSync(dirname)) {
-    fs.mkdirSync(dirname, { recursive: true });
+module.exports.forceDirectories = (folderPath) => {
+  if (!fs.existsSync(folderPath)) {
+    fs.mkdirSync(folderPath, { recursive: true });
   }
 };
+
+module.exports.forceDirectoriesForFilePath = (filePath) => {
+  const folderPath = path.dirname(filePath);
+  module.exports.ensureFolderPathExists(folderPath);
+};
+
+module.exports.regexFilter = (stringToTest, regularExpressionList) => {
+  const invalidRegExpressions = regularExpressionList.filter(regexp => (!(regexp instanceof RegExp)));
+
+  if (invalidRegExpressions.length > 0) {
+    throw new Error(`There are invalid RegExp in the list: ${invalidRegExpressions.join(', ')}`);
+  }
+
+  const regExpressionsThatMatch = regularExpressionList.filter(regexp => regexp.test(stringToTest));
+
+  return regExpressionsThatMatch;
+}

@@ -1,2 +1,2 @@
-const httpLoggerCreator = require("./httpLoggerCreator.js");
-module.exports = httpLoggerCreator;
+const httpLoggerWrapper = require("./httpLoggerWrapper.js");
+module.exports = httpLoggerWrapper;
