@@ -1,16 +1,12 @@
 declare module 'express-curl-mock-logger' {
-    import { RequestHandler } from 'express';
-  
-    interface Options {
-      skipUrlPatterns: Array<RegExp>;
-      httpLogsFolderPath?: string;
-      logToConsoleWhenSkippingUrls: boolean;
-      logCurlToConsole?: boolean;
-      logResponseToConsole?: boolean;
-    }
-    
-    function httpLoggerCreator(options?: Options): RequestHandler;
-  
-    export = httpLoggerCreator;
-  }
-  
+  import { RequestHandler } from 'express';
+
+  function httpLoggerCreator(
+    skipUrlPatterns: Array<RegExp>,
+    logToConsoleWhenSkippingUrls: boolean,
+    httpLogsFolderPath?: string,
+    logCurlToConsole?: boolean,
+    logResponseToConsole?: boolean): RequestHandler;
+
+  export = httpLoggerCreator;
+}

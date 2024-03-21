@@ -1,3 +1,6 @@
+const os = require("os");
+const isWindows = os.platform() === "win32";
+
 const curlBodyGenerator = (req) => {
   if (!req.body) {
     return "";
@@ -5,7 +8,14 @@ const curlBodyGenerator = (req) => {
 
   if (req.body) {
     if (typeof req.body === "object") {
-      const body = `-d '${JSON.stringify(req.body).replace(/'/g, "\\'")}'`;
+      let stringifiedJson = JSON.stringify(req.body).replace(/'/g, "\\'");
+
+      if (stringifiedJson == '{}') {
+        return '';
+      }
+
+      const body = `-d '${stringifiedJson}'`;
+      
       return body;
     }
 
@@ -20,15 +30,14 @@ const curlBodyGenerator = (req) => {
 };
 
 module.exports.curlCommandGenerator = (req) => {
-  const method = req.method;
-  const { host, port } = req.headers;
+  const { method, headers, originalUrl, protocol }  = req;
+  const { host } = headers;
+  
   const defaultHost = "localhost";
-
-  const protocol = req.protocol === "https" ? "https" : "http";
   const usedHost = host || defaultHost;
-  const url = `${protocol}://${usedHost}${req.originalUrl}`;
+  const url = `"${protocol}://${usedHost}${originalUrl}"`;
 
-  const headersString = Object.entries(req.headers)
+  const headersString = Object.entries(headers)
     .map(([key, value]) => `-H "${key}: ${value.replace(/"/g, '\\"')}"`)
     .join(" ");
 

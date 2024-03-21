@@ -11,7 +11,7 @@ const textContentTypesFragments = ["json", "xml", "html", "javascript", "css", "
 
 const { log } = console;
 
-module.exports = (skipUrlPatterns, httpLogsFolderPath, logToConsoleWhenSkippingUrls, logCurlToConsole, logResponseToConsole) => {
+module.exports = (skipUrlPatterns, logToConsoleWhenSkippingUrls, httpLogsFolderPath,logCurlToConsole, logResponseToConsole) => {
   return (req, res, next) => {
     const oldWrite = res.write;
     const oldEnd = res.end;
@@ -35,7 +35,7 @@ module.exports = (skipUrlPatterns, httpLogsFolderPath, logToConsoleWhenSkippingU
 
       oldEnd.apply(res, args);
 
-      const httpLogger = httpLoggerCreator(chunks, skipUrlPatterns, httpLogsFolderPath, logToConsoleWhenSkippingUrls, logCurlToConsole, logResponseToConsole);
+      const httpLogger = httpLoggerCreator(chunks, skipUrlPatterns, logToConsoleWhenSkippingUrls, httpLogsFolderPath, logCurlToConsole, logResponseToConsole);
 
       httpLogger(req, res, next);
     };
