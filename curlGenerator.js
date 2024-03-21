@@ -32,7 +32,7 @@ const curlBodyGenerator = (req) => {
 module.exports.curlCommandGenerator = (req) => {
   const { method, headers, originalUrl, protocol }  = req;
   const { host } = headers;
-  
+
   const defaultHost = "localhost";
   const usedHost = host || defaultHost;
   const url = `"${protocol}://${usedHost}${originalUrl}"`;
@@ -42,6 +42,6 @@ module.exports.curlCommandGenerator = (req) => {
     .join(" ");
 
   const body = curlBodyGenerator(req);
-  const curlCommand = `curl -X ${method} ${url} ${headersString} ${body}`;
+  const curlCommand = `curl --include --location-trusted -X ${method} ${url} ${headersString} ${body}`;
   return curlCommand;
 };
