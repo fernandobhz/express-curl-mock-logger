@@ -13,6 +13,8 @@ const { log } = console;
 
 module.exports = (skipUrlPatterns, logToConsoleWhenSkippingUrls, httpLogsFolderPath,logCurlToConsole, logResponseToConsole) => {
   return (req, res, next) => {
+    const requestStartTime  = new Date();
+
     const oldWrite = res.write;
     const oldEnd = res.end;
 
@@ -25,7 +27,7 @@ module.exports = (skipUrlPatterns, logToConsoleWhenSkippingUrls, httpLogsFolderP
       oldWrite.apply(res, args);
     };
 
-    res.end = function (...args) {
+    res.end = function (...args) {      
       const [chunk] = args;
 
       if (chunk) {
@@ -34,8 +36,10 @@ module.exports = (skipUrlPatterns, logToConsoleWhenSkippingUrls, httpLogsFolderP
       }
 
       oldEnd.apply(res, args);
+      const requestEndTime  = new Date();
+      const elapsedTimeInMilliseconds = requestEndTime  - requestStartTime;
 
-      const httpLogger = httpLoggerCreator(chunks, skipUrlPatterns, logToConsoleWhenSkippingUrls, httpLogsFolderPath, logCurlToConsole, logResponseToConsole);
+      const httpLogger = httpLoggerCreator(chunks, elapsedTimeInMilliseconds, skipUrlPatterns, logToConsoleWhenSkippingUrls, httpLogsFolderPath, logCurlToConsole, logResponseToConsole);
 
       httpLogger(req, res, next);
     };

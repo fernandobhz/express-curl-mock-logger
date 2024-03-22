@@ -11,12 +11,12 @@ const textContentTypesFragments = ["json", "xml", "html", "javascript", "css", "
 
 const { log } = console;
 
-const generateLogPaths = (baseLogsFolderPath, suffixFolderName, logFileExtension) => {
+const generateLogPaths = (baseLogsFolderPath, elapsedTimeInMilliseconds, resourceName, logFileExtension) => {
   const isWindows = os.platform() === "win32";
   const scriptExtensionName = isWindows ? "bat" : "sh";
 
   const baseFolderName = timestampFileNameGenerator();
-  const fullFolderName = `${baseFolderName}-${suffixFolderName}`;
+  const fullFolderName = `${baseFolderName}-${resourceName}-${elapsedTimeInMilliseconds}ms`;
   const logFullPath = path.join(baseLogsFolderPath, fullFolderName);
   forceDirectories(logFullPath);
 
@@ -31,6 +31,7 @@ const generateLogPaths = (baseLogsFolderPath, suffixFolderName, logFileExtension
 
 module.exports.httpLoggerCreator = (
   chunks = [],
+  elapsedTimeInMilliseconds = 0,
   skipUrlPatterns = [],
   logToConsoleWhenSkippingUrls = false,
   httpLogsFolderPath = "http-logs",
@@ -88,7 +89,12 @@ module.exports.httpLoggerCreator = (
      * Starting the processing
      */
     const chunksBuffer = Buffer.concat(chunks);
-    const { curlLogPath, requestLogPath, responseLogPath, fileContentPath } = generateLogPaths(httpLogsFolderPath, logFullFileName, logFileExtension);
+    const { curlLogPath, requestLogPath, responseLogPath, fileContentPath } = generateLogPaths(
+      httpLogsFolderPath,
+      elapsedTimeInMilliseconds,
+      logFullFileName,
+      logFileExtension
+    );
 
     // Response body
     let responseTextBody = "";
@@ -124,8 +130,8 @@ module.exports.httpLoggerCreator = (
      * Writing results
      */
     const curlCommand = curlCommandGenerator(req);
-    const fullTextRequest = `${requestMethod} ${requestResourcePath}\n\nHeaders:\n${requestHeadersTextList}\n\nQueryString:\n${requestQueryStringTextlist}\n\nRequestBody:\n${requestTextBody}`;
-    const fullTextResponse = `HTTP/${httpVersion} ${res.statusCode}\n\nHeaders:${responseHeadersTextList}\n\nResponseBody:\n${responseTextBody}`;
+    const fullTextRequest = `${requestMethod} ${requestResourcePath}\nTook: ${elapsedTimeInMilliseconds}ms\n\nHeaders:\n${requestHeadersTextList}\n\nQueryString:\n${requestQueryStringTextlist}\n\nRequestBody:\n${requestTextBody}`;
+    const fullTextResponse = `HTTP/${httpVersion} ${res.statusCode}\nTook: ${elapsedTimeInMilliseconds}ms\n\nHeaders:${responseHeadersTextList}\n\nResponseBody:\n${responseTextBody}`;
 
     fs.writeFileSync(curlLogPath, curlCommand);
     fs.writeFileSync(requestLogPath, fullTextRequest);
