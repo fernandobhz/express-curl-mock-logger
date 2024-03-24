@@ -18,16 +18,21 @@ npm install express-curl-mock-logger
 ```js
 const fs = require("fs");
 const express = require("express");
-const bodyParser = require ('body-parser'); 
+const bodyParser = require("body-parser");
 const httpLoggerCreator = require("./index.js");
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded());
-app.use (bodyParser.raw());
+app.use(bodyParser.raw());
 
 const skippUrlPattens = [/^\/a/, /^\/b/];
 app.use(httpLoggerCreator(skippUrlPattens));
+
+app.get("/", (req, res, next) => {
+  req.context = { a: 1, b: 2, c: 3 };
+  next();
+});
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Hello, world!" });

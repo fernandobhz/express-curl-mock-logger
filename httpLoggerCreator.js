@@ -54,7 +54,15 @@ module.exports.httpLoggerCreator = (
     /**
      * Collecting some initial required data
      */
-    const { httpVersion, method: requestMethod, originalUrl, body: requestBody, headers: requestHeaders, query: requestQueryString } = req;
+    const {
+      httpVersion,
+      method: requestMethod,
+      originalUrl,
+      body: requestBody,
+      headers: requestHeaders,
+      query: requestQueryString,
+      context: requestContext,
+    } = req;
 
     const responseHeaders = res.getHeaders();
     const responseContentType = res.get("Content-Type");
@@ -67,15 +75,19 @@ module.exports.httpLoggerCreator = (
     const isTextResponse = currentFragment !== "unknow";
     const [requestResourcePath] = originalUrl.split("?");
 
-    const requestHeadersTextList = Object.entries(requestHeaders)
+    const requestHeadersTextList = Object.entries(requestHeaders || {})
       .map(([key, value]) => `${key}: ${value}`)
       .join("\n");
 
-    const requestQueryStringTextlist = Object.entries(requestQueryString)
+    const requestQueryStringTextlist = Object.entries(requestQueryString || {})
       .map(([key, value]) => `${key}: ${value}`)
       .join("\n");
 
-    const responseHeadersTextList = Object.entries(responseHeaders)
+    const requestContextTextlist = Object.entries(requestContext || {})
+      .map(([key, value]) => `${key}: ${value}`)
+      .join("\n");
+
+    const responseHeadersTextList = Object.entries(responseHeaders || {})
       .map(([key, value]) => `${key}: ${value}`)
       .join("\n");
 
@@ -130,7 +142,7 @@ module.exports.httpLoggerCreator = (
      * Writing results
      */
     const curlCommand = curlCommandGenerator(req);
-    const fullTextRequest = `${requestMethod} ${requestResourcePath}\nTook: ${elapsedTimeInMilliseconds}ms\n\nHeaders:\n${requestHeadersTextList}\n\nQueryString:\n${requestQueryStringTextlist}\n\nRequestBody:\n${requestTextBody}`;
+    const fullTextRequest = `${requestMethod} ${requestResourcePath}\nTook: ${elapsedTimeInMilliseconds}ms\n\nHeaders:\n${requestHeadersTextList}\n\nRequest.Context:\n${requestContextTextlist}\n\nQueryString:\n${requestQueryStringTextlist}\n\nRequestBody:\n${requestTextBody}`;
     const fullTextResponse = `HTTP/${httpVersion} ${res.statusCode}\nTook: ${elapsedTimeInMilliseconds}ms\n\nHeaders:${responseHeadersTextList}\n\nResponseBody:\n${responseTextBody}`;
 
     fs.writeFileSync(curlLogPath, curlCommand);
