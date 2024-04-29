@@ -91,7 +91,6 @@ module.exports.httpLoggerCreator = (
       .map(([key, value]) => `${key}: ${value}`)
       .join("\n");
 
-    const isContentEncodedWithGzip = contentEncoding === "gzip";
     const urlFullFileName = path.basename(requestResourcePath) || "root";
     const urlFileExtension = path.extname(urlFullFileName).slice(1);
     const logFileExtension = urlFileExtension || currentFragment;
@@ -101,6 +100,7 @@ module.exports.httpLoggerCreator = (
      * Starting the processing
      */
     const chunksBuffer = Buffer.concat(chunks);
+    const isChunksBufferGzipped = chunksBuffer[0] === 0x1f && chunksBuffer[1] === 0x8b;
     const { curlLogPath, requestLogPath, responseLogPath, fileContentPath } = generateLogPaths(
       httpLogsFolderPath,
       elapsedTimeInMilliseconds,
@@ -111,7 +111,7 @@ module.exports.httpLoggerCreator = (
     // Response body
     let responseTextBody = "";
 
-    if (isContentEncodedWithGzip && isTextResponse) {
+    if (isChunksBufferGzipped && isTextResponse) {
       responseTextBody = zlib.gunzipSync(chunksBuffer).toString("ascii");
     } else if (isTextResponse) {
       responseTextBody = chunksBuffer.toString("ascii");
